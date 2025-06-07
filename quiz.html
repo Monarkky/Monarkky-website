@@ -54,91 +54,118 @@
 
     <script>
         const passwords = [
-            "Goodluck",
-            "Havefun",
-            "BestofLuck",
-            "Hound78",
-            "Hound91",
-            "Hound37",
-            "Hound10",
-            "Hound8",
-            "Hound1",
-            "Hound5",
-            "Hound3",
-            "Hound7",
-            "Hound17",
-            "Hound19",
-            "Hound39",
-            "Hound30",
-            "Hound33",
-            "Hound28",
-            "Hound27",
-            "Hound15",
-            "Hound27",
-            "Hound37",
-            "Hound11",
-            "Hound9"
-        ];
+    "Goodluck",
+    "Havefun",
+    "BestofLuck",
+    "Hound78",
+    "Hound91",
+    "Hound37",
+    "Hound10",
+    "Hound8",
+    "Hound1",
+    "Hound5",
+    "Hound3",
+    "Hound7",
+    "Hound17",
+    "Hound19",
+    "Hound39",
+    "Hound30",
+    "Hound33",
+    "Hound28",
+    "Hound27",
+    "Hound15",
+    "Hound27",
+    "Hound37",
+    "Hound11",
+    "Hound9"
+];
 
-        const usedPasswords = new Set();
+const usedPasswords = new Set();
 
-        const passwordForm = document.getElementById('password-form');
-        const quizContainer = document.getElementById('quiz-container');
-        const quizForm = document.getElementById('quiz-form');
-        const resultDiv = document.getElementById('result');
+const passwordForm = document.getElementById('password-form');
+const quizContainer = document.getElementById('quiz-container');
+const quizForm = document.getElementById('quiz-form');
+const resultDiv = document.getElementById('result');
 
-        passwordForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('name').value;
-            const password = document.getElementById('password').value;
-            if (passwords.includes(password) && !usedPasswords.has(password)) {
-                usedPasswords.add(password);
-                quizContainer.style.display = 'block';
-                passwordForm.style.display = 'none';
-            } else if (usedPasswords.has(password)) {
-                alert("This password has already been used. Please try another one.");
-            } else {
-                alert("Invalid password. Please try again.");
-            }
-        });
+let userName;
 
-        quizForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const answers = {
-                q1: document.getElementById('q1').value.toLowerCase(),
-                q2: document.getElementById('q2').value.toLowerCase(),
-                q3: document.getElementById('q3').value.toLowerCase(),
-                q4: document.getElementById('q4').value.toLowerCase(),
-                q5: document.getElementById('q5').value.toLowerCase(),
-                q6: document.getElementById('q6').value.toLowerCase()
-            };
+passwordForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    userName = name;
+    const password = document.getElementById('password').value;
+    if (passwords.includes(password) && !usedPasswords.has(password)) {
+        usedPasswords.add(password);
+        quizContainer.style.display = 'block';
+        passwordForm.style.display = 'none';
+    } else if (usedPasswords.has(password)) {
+        alert("This password has already been used. Please try another one.");
+    } else {
+        alert("Invalid password. Please try again.");
+    }
+});
 
-            const correctAnswers = {
-                q1: 'red',
-                q2: 'dog',
-                q3: 'barefoot',
-                q4: 'yellow',
-                q5: 'virus',
-                q6: 'krusty krab'
-            };
+quizForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const answers = {
+        q1: document.getElementById('q1').value.toLowerCase(),
+        q2: document.getElementById('q2').value.toLowerCase(),
+        q3: document.getElementById('q3').value.toLowerCase(),
+        q4: document.getElementById('q4').value.toLowerCase(),
+        q5: document.getElementById('q5').value.toLowerCase(),
+        q6: document.getElementById('q6').value.toLowerCase()
+    };
 
-            let score = 0;
-            for (const question in answers) {
-                if (answers[question] === correctAnswers[question]) {
-                    score += question === 'q1' ? 5 : question === 'q2' ? 5 : question === 'q3' ? 15 : question === 'q4' ? 10 : question === 'q5' ? 15 : 30;
-                }
-            }
+    const correctAnswers = {
+        q1: 'red',
+        q2: 'dog',
+        q3: 'barefoot',
+        q4: 'yellow',
+        q5: 'virus',
+        q6: 'krusty krab'
+    };
 
-            let resultText = `Your final score is ${score} points.`;
-            if (score >= 70) {
-                resultText += " Congratulations! You earned 2 names in Roulette!";
-            } else if (score >= 50) {
-                resultText += " Congratulations! You qualified for Roulette!";
-            } else {
-                resultText += " Better luck next time!";
-            }
-            resultDiv.innerText = resultText;
-        });
+    let score = 0;
+    for (const question in answers) {
+        if (answers[question] === correctAnswers[question]) {
+            score += question === 'q1' ? 5 : question === 'q2' ? 5 : question === 'q3' ? 15 : question === 'q4' ? 10 : question === 'q5' ? 15 : 30;
+        }
+    }
+
+    let resultText = `Your final score is ${score} points.`;
+    if (score >= 70) {
+        resultText += " Congratulations! You earned 2 names in Roulette!";
+    } else if (score >= 50) {
+        resultText += " Congratulations! You qualified for Roulette!";
+    } else {
+        resultText += " Better luck next time!";
+    }
+
+    const formData = new FormData();
+    formData.append('name', userName);
+    formData.append('score', score);
+    formData.append('result', resultText);
+
+    fetch('https://formspree.io/f/YOUR_FORMSPREE_FORM_ID', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
+
+    resultDiv.innerHTML = `
+        ${resultText}
+        <p style="font-weight: bold; color: blue;"> Thank you, <p style="font-weight: bold; color: Purple;"> ${userName}! <p style="font-weight: bold; color: blue;"> Have a nice day!</p>
+        <p style="font-weight: bold; color: red;"> Don't forget to Screenshot your Result!</p>
+         <p style="font-weight: bold; color: Green;"> Regards Monarkky</p>
+    `;
+
+    quizForm.style.display = 'none';
+});
     </script>
 </body>
 </html>
