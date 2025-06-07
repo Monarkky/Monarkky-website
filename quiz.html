@@ -137,23 +137,6 @@
             } else {
                 resultText += " Better luck next time!";
             }
-
-            const formData = new FormData();
-            formData.append('name', document.getElementById('name').value);
-            formData.append('score', score);
-            formData.append('result', resultText);
-
-            fetch('https://formspree.io/f/YOUR_FORMSPREE_FORM_ID', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error(error));
-
             resultDiv.innerText = resultText;
         });
     </script>
