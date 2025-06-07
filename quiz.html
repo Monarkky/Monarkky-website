@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monarkky Mini Games</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Monarkky Mini Games</h1>
+    <p>Note: Min Score 50 to qualify for Roulette, Score 70 earns 2 names in Roulette</p>
+    <form id="password-form">
+        <label>Please enter your name:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label>Please enter the password:</label>
+        <input type="password" id="password" name="password"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <div id="quiz-container" style="display: none;">
+        <form id="quiz-form">
+            <div class="question">
+                <label>1. What is the color of an apple?</label>
+                <input type="text" id="q1" name="q1"><br><br>
+            </div>
+            <div class="question">
+                <label>2. What has four legs and says 'woof'?</label>
+                <input type="text" id="q2" name="q2"><br><br>
+            </div>
+            <div class="question">
+                <label>3. What do you call a bear with no socks on?</label>
+                <input type="text" id="q3" name="q3"><br><br>
+            </div>
+            <div class="question">
+                <label>4. What is the color of the sun?</label>
+                <input type="text" id="q4" name="q4"><br><br>
+            </div>
+            <div class="question">
+                <label>5. What computer biggest enemy?</label>
+                <input type="text" id="q5" name="q5"><br><br>
+            </div>
+            <div class="question">
+                <label>6. Where spongebob work everyday?</label>
+                <input type="text" id="q6" name="q6"><br><br>
+            </div>
+            <input type="submit" value="Submit">
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const passwords = [
+            "Goodluck",
+            "Havefun",
+            "BestofLuck",
+            "Hound78",
+            "Hound91",
+            "Hound37",
+            "Hound10",
+            "Hound8",
+            "Hound1",
+            "Hound5",
+            "Hound3",
+            "Hound7",
+            "Hound17",
+            "Hound19",
+            "Hound39",
+            "Hound30",
+            "Hound33",
+            "Hound28",
+            "Hound27",
+            "Hound15",
+            "Hound27",
+            "Hound37",
+            "Hound11",
+            "Hound9"
+        ];
+
+        const usedPasswords = new Set();
+
+        const passwordForm = document.getElementById('password-form');
+        const quizContainer = document.getElementById('quiz-container');
+        const quizForm = document.getElementById('quiz-form');
+        const resultDiv = document.getElementById('result');
+
+        passwordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const password = document.getElementById('password').value;
+            if (passwords.includes(password) && !usedPasswords.has(password)) {
+                usedPasswords.add(password);
+                quizContainer.style.display = 'block';
+                passwordForm.style.display = 'none';
+            } else if (usedPasswords.has(password)) {
+                alert("This password has already been used. Please try another one.");
+            } else {
+                alert("Invalid password. Please try again.");
+            }
+        });
+
+        quizForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const answers = {
+                q1: document.getElementById('q1').value.toLowerCase(),
+                q2: document.getElementById('q2').value.toLowerCase(),
+                q3: document.getElementById('q3').value.toLowerCase(),
+                q4: document.getElementById('q4').value.toLowerCase(),
+                q5: document.getElementById('q5').value.toLowerCase(),
+                q6: document.getElementById('q6').value.toLowerCase()
+            };
+
+            const correctAnswers = {
+                q1: 'red',
+                q2: 'dog',
+                q3: 'barefoot',
+                q4: 'yellow',
+                q5: 'virus',
+                q6: 'krusty krab'
+            };
+
+            let score = 0;
+            for (const question in answers) {
+                if (answers[question] === correctAnswers[question]) {
+                    score += question === 'q1' ? 5 : question === 'q2' ? 5 : question === 'q3' ? 15 : question === 'q4' ? 10 : question === 'q5' ? 15 : 30;
+                }
+            }
+
+            let resultText = `Your final score is ${score} points.`;
+            if (score >= 70) {
+                resultText += " Congratulations! You earned 2 names in Roulette!";
+            } else if (score >= 50) {
+                resultText += " Congratulations! You qualified for Roulette!";
+            } else {
+                resultText += " Better luck next time!";
+            }
+            resultDiv.innerText = resultText;
+        });
+    </script>
+</body>
+</html>
